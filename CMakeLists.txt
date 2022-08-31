@@ -8,5 +8,5 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS},./src)
 
 
-add_executable(SDL2Game src/main.c)
+add_executable(SDL2Game src/main.c src/math.c src/player.c src/obstacle.c)
 target_link_libraries(SDL2Game ${SDL2_LIBRARIES})
