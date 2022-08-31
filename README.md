@@ -1,4 +1,4 @@
-#CMake Endless Runner
+# CMake Endless Runner
 
 ## Libraries
 - [SDL2](https://www.libsdl.org/index.php)
