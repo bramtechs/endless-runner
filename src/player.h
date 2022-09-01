@@ -9,5 +9,7 @@
 void player_init(void);
 void player_update(float delta);
 void player_draw(App *app);
+void player_jump(void);
+bool player_move(float x, float y);
 
 #endif // PLAYER_H 

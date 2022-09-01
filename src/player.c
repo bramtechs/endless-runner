@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "main.h"
 #include "math.h"
+#include "obstacle.h"
 #include <SDL.h>
 
 float fVelY = GRAVITY;
@@ -17,7 +18,28 @@ void player_init(void){
 void player_update(float delta){
     fVelY += delta*GRAVITY;
 
-    rRegion.y += (int)fVelY;
+    if (!player_move(0.0f,fVelY)){
+        fVelY = 0.0f;
+    }
+}
+
+void player_jump(void){
+
+}
+
+bool player_move(float x, float y){
+    int nAddX = (int)x;
+    int nAddY = (int)y;
+    SDL_Rect rPredict = { rRegion.x+nAddX, rRegion.y + nAddY, rRegion.w, rRegion.h };
+
+    // don't move if touching obstacle 
+    if (obstacle_overlaps(&rPredict)){
+        return false;
+    }else{
+        rRegion.x += nAddX;
+        rRegion.y += nAddY;
+        return true;
+    }
 }
 
 void player_draw(App *app){

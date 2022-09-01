@@ -32,7 +32,7 @@ int main(void){
 
     // create the SDL2 window
     int nRenderFlags = SDL_RENDERER_ACCELERATED;
-    int nWindowFlags = SDL_WINDOW_ALWAYS_ON_TOP; 
+    int nWindowFlags = SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_RESIZABLE; 
 
     csc(SDL_Init(SDL_INIT_VIDEO));
 
@@ -89,7 +89,16 @@ void handleInput(SDL_Event *event){
             bIsRunning = false;
     		exit(0);
     		break;
-    
+        case SDL_KEYDOWN:
+            SDL_Keycode sKey = event->key.keysym.sym;
+            //SDL_Log("%s",SDL_GetKeyName(sKey));
+            switch (sKey){
+                case SDLK_SPACE:
+                    SDL_Log("jump");
+                    player_jump();
+                    break;
+            }
+            break;
     	default:
     		break;
     }
