@@ -9,11 +9,11 @@
 
 #define MAX_OBSTACLES 64
 #define SIZE 64 
-#define SPEED -64 
+#define SPEED 6 
 
 typedef struct {
     bool bIsAlive;
-    float fVelX;
+    bool bIsFloor;
     SDL_Rect rRegion;
     SDL_Color sColor;
 } Obstacle;
