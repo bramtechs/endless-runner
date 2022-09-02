@@ -4,12 +4,20 @@
 #include "math.h"
 #include "player.h"
 #include "obstacle.h"
+#include "background.h"
 #include <time.h>
 #include <stdlib.h>
 
 bool bIsRunning = true;
 SDL_Color sBg = { NULL };
+int nFrameNumber = 0;
+
 bool bHoldingJump = false;
+bool bHoldingStomp = false;
+
+// set 1 for benchmark purposes
+// and checking memory leaks
+#define FAST_MODE 0 
 
 // check sdl code if not 0
 bool csc(int code){ 
@@ -38,7 +46,7 @@ int main(void){
 
     // create the SDL2 window
     int nRenderFlags = SDL_RENDERER_ACCELERATED;
-    int nWindowFlags = SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_RESIZABLE; 
+    int nWindowFlags = SDL_WINDOW_ALWAYS_ON_TOP; 
 
     csc(SDL_Init(SDL_INIT_VIDEO));
 
@@ -56,8 +64,9 @@ int main(void){
 
     // init game components
     sBg = hexToColor(0x551122FF);
-    obstacle_placeFloor();
+    obstacle_init();
     player_init();
+    background_init();
 
     // main loop
     SDL_Event event;
@@ -65,6 +74,7 @@ int main(void){
     Uint64 nNow  = SDL_GetPerformanceCounter();
     Uint64 nPast = 0;
     float fDeltaTime = 0.0f;
+    float fFPS = 0.0f;
 
     while(bIsRunning){
 
@@ -76,11 +86,21 @@ int main(void){
             handleInput(&event);
     	}
 
+#if (FAST_MODE == 1)
+        fDeltaTime = 0.1f;
+#else
         fDeltaTime = (float)((nNow - nPast)*1.0f / (double)SDL_GetPerformanceFrequency());
+#endif
+        fFPS = 1.0f / fDeltaTime;
         update(fDeltaTime);
         draw(csp(&sApp));
 
-        SDL_Delay(1000 / FPS);
+        if (nFrameNumber % MAX_FPS*5 == 0){
+            SDL_Log("FPS %f",fFPS);
+        }
+        
+        nFrameNumber++;
+        SDL_Delay(1000 / MAX_FPS);
     }
 
     SDL_Log("Shutting down...");
@@ -101,12 +121,18 @@ void handleInput(SDL_Event *event){
                 case SDLK_SPACE:
                     bHoldingJump = true;
                     break;
+                case SDLK_LCTRL:
+                    bHoldingStomp = true;
+                    break;
             }
             break;
         case SDL_KEYUP:
             switch (event->key.keysym.sym){
                 case SDLK_SPACE:
                     bHoldingJump = false;
+                    break;
+                case SDLK_LCTRL:
+                    bHoldingStomp = false;
                     break;
             }
             break;
@@ -117,6 +143,10 @@ void update(float delta){
     if (bHoldingJump){
         player_jump();
     }
+    if (bHoldingStomp){
+        player_stomp();
+    }
+    background_update(delta);
     player_update(delta);
     obstacle_update(delta);
 }
@@ -127,6 +157,7 @@ void draw(App *app){
     csc(SDL_SetRenderDrawColor(app->renderer,sBg.r,sBg.g,sBg.b,sBg.a));
     csc(SDL_RenderClear(app->renderer));
 
+    background_draw(app);
     player_draw(app);
     obstacle_draw(app);
 

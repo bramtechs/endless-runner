@@ -10,16 +10,17 @@ float fSpawnTimer = 3.0f;
 
 SDL_Color sPowerColor = { NULL };
 
-void obstacle_placeFloor(void){
+void obstacle_init(void){
 
     // amount of cubes to place
-    int nCount = WIDTH / SIZE + 5;
+    int nCount = WIDTH / SIZE + 4;
 
     for (int i = 0; i < nCount; i++){
         int nX = i;
         int nY = HEIGHT/SIZE-1;
         int i = obstacle_place(nX,nY,i);
         aObstacles[i].bIsFloor = true;
+        aObstacles[i].rRegion.w += 10; // hide gaps
     }
     SDL_Log("Placed down a floor of %d cubes",nCount);
 }
@@ -97,26 +98,18 @@ void obstacle_update(float delta){
         if (aObstacles[i].bIsAlive == false) continue;
         Obstacle *sObs = &aObstacles[i];
 
-        if (aObstacles[i].bIsFloor){
-            float fNewX = (i+fOffsetX)*SIZE;
-            sObs->rRegion.x = fNewX;
-            sObs->rPowerup.x = fNewX;
-        }else {
-            float fDeltaX = SPEED*delta;
-            sObs->rRegion.x -= fDeltaX;
-            sObs->rPowerup.x -= fDeltaX;
-            if (sObs->rRegion.x < -20-SIZE){
+        float fDeltaX = SPEED*delta;
+        sObs->rRegion.x -= fDeltaX;
+        sObs->rPowerup.x -= fDeltaX;
+        if (sObs->rRegion.x < -20-SIZE){
+            if (sObs->bIsFloor){
+                sObs->rRegion.x = WIDTH+SIZE;
+            }else{
                 sObs->bIsAlive = false;
                 SDL_Log("Cleaned up block");
             }
         }
     }
-
-    // statisfying optical illusion for floor
-    if (fOffsetX < -2.0f){
-        fOffsetX += 2.0f;
-    }
-    fOffsetX -= delta*FLOOR_SPEED;
 
     // spawn blocks
     if (fSpawnTimer < 0.0f){
@@ -124,7 +117,7 @@ void obstacle_update(float delta){
         fSpawnTimer += fRNG; // TODO random
 
         SDL_Log("Spawned obstacle. Next in %fs...",fSpawnTimer);
-        int i = obstacle_place(WIDTH/SIZE+5,HEIGHT/SIZE-2.5f,1);
+        int i = obstacle_place(WIDTH/SIZE+5,HEIGHT/SIZE-2,1);
 
         aObstacles[i].bHasPower = fRNG < 0.8f || fPrevInterval < 0.8f;
 

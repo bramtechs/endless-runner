@@ -22,7 +22,7 @@ typedef struct {
     SDL_Color sPowerColor;
 } Obstacle;
 
-void obstacle_placeFloor(void);
+void obstacle_init(void);
 
 bool obstacle_overlaps(const SDL_FRect *rect, float *snapY);
 bool obstacle_overlaps_power(const SDL_FRect *rect);
