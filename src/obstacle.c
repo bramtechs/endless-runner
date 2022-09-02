@@ -6,56 +6,131 @@
 
 Obstacle aObstacles[MAX_OBSTACLES] = { false };
 float fOffsetX = 0.0f;
+float fSpawnTimer = 3.0f;
+
+SDL_Color sPowerColor = { NULL };
 
 void obstacle_placeFloor(void){
 
     // amount of cubes to place
-    int nCount = WIDTH / SIZE + 4;
+    int nCount = WIDTH / SIZE + 5;
 
     for (int i = 0; i < nCount; i++){
-        int nX = i*SIZE;
-        int nY = HEIGHT-SIZE;
+        int nX = i;
+        int nY = HEIGHT/SIZE-1;
+        int i = obstacle_place(nX,nY,i);
+        aObstacles[i].bIsFloor = true;
+    }
+    SDL_Log("Placed down a floor of %d cubes",nCount);
+}
+
+int obstacle_place(float x, float y, int index){
+    if (sPowerColor.r == NULL){
+        sPowerColor = hexToColor(0xFFBB00FF);
+    }
+
+    // find empty obstacle
+    for (int i = 0; i < MAX_OBSTACLES; i++){
+        if (aObstacles[i].bIsAlive == true) continue;
+
+        float nX = x*SIZE;
+        float nY = y*SIZE;
         SDL_Color sCol = i % 2 == 0 ? hexToColor(0xAAAAAAFF):hexToColor(0xBBBBBBFF);
 
         // initalize new obstacle
         aObstacles[i].bIsAlive = true;
-        aObstacles[i].bIsFloor = true;
-        aObstacles[i].rRegion = (SDL_Rect) {nX,nY,SIZE,SIZE};
+        aObstacles[i].bIsFloor = false;
+        aObstacles[i].bHasPower = false;
+        aObstacles[i].rRegion = (SDL_FRect) {nX,nY,SIZE,SIZE};
+        
+        float fMargin = 20;
+        aObstacles[i].rPowerup = (SDL_FRect) {nX+fMargin,nY-SIZE*2.0f,SIZE-fMargin*2.0f,SIZE-fMargin*2.0f};
         aObstacles[i].sColor = sCol;
+        aObstacles[i].sPowerColor = sPowerColor;
+        return i;
     }
-
-    SDL_Log("Placed down a floor of %d cubes",nCount);
-    
+    SDL_LogError(1,"Max obstacle count reached!");
+    return 0;
 }
 
-bool obstacle_overlaps(const SDL_Rect *rect){
+bool obstacle_overlaps(const SDL_FRect *rect, float *snapY){
     for (int i = 0; i < MAX_OBSTACLES; i++){
         if (aObstacles[i].bIsAlive == false) continue;
+        if (aObstacles[i].bIsFloor == false) continue;
 
-        SDL_Rect *rRegion = &aObstacles[i].rRegion; 
-        if (SDL_HasIntersection(rRegion, rect)){
+        SDL_FRect *rRegion = &aObstacles[i].rRegion; 
+        // TODO this is awful, implement own function
+        SDL_Rect rA = FRectToRect(rRegion);
+        SDL_Rect rB = FRectToRect(rect);
+        if (SDL_HasIntersection(&rA, &rB)){
+            *snapY = rRegion->y;
+            return true;
+        }
+    }
+    *snapY = 0.0f;
+    return false;
+}
+
+bool obstacle_overlaps_power(const SDL_FRect *rect){
+    for (int i = 0; i < MAX_OBSTACLES; i++){
+        if (aObstacles[i].bIsAlive == false) continue;
+        if (aObstacles[i].bIsFloor == true) continue;
+        if (aObstacles[i].bHasPower == false) continue;
+
+        SDL_FRect *rRegion = &aObstacles[i].rPowerup; 
+        // TODO this is awful, implement own function
+        SDL_Rect rA = FRectToRect(rRegion);
+        SDL_Rect rB = FRectToRect(rect);
+        if (SDL_HasIntersection(&rA, &rB)){
+            SDL_Log("touches");
             return true;
         }
     }
     return false;
 }
 
+float fPrevInterval = 0.0f;
+
 void obstacle_update(float delta){
     // move all the obstacles to the left
     for (int i = 0; i < MAX_OBSTACLES; i++){
         if (aObstacles[i].bIsAlive == false) continue;
-
         Obstacle *sObs = &aObstacles[i];
 
-        sObs->rRegion.x = (i+fOffsetX)*SIZE;
+        if (aObstacles[i].bIsFloor){
+            float fNewX = (i+fOffsetX)*SIZE;
+            sObs->rRegion.x = fNewX;
+            sObs->rPowerup.x = fNewX;
+        }else {
+            float fDeltaX = SPEED*delta;
+            sObs->rRegion.x -= fDeltaX;
+            sObs->rPowerup.x -= fDeltaX;
+            if (sObs->rRegion.x < -20-SIZE){
+                sObs->bIsAlive = false;
+                SDL_Log("Cleaned up block");
+            }
+        }
     }
 
-    // statisfying optical illusion
+    // statisfying optical illusion for floor
     if (fOffsetX < -2.0f){
         fOffsetX += 2.0f;
     }
+    fOffsetX -= delta*FLOOR_SPEED;
 
-    fOffsetX -= delta*SPEED;
+    // spawn blocks
+    if (fSpawnTimer < 0.0f){
+        float fRNG = rand()%3+0.3f;
+        fSpawnTimer += fRNG; // TODO random
+
+        SDL_Log("Spawned obstacle. Next in %fs...",fSpawnTimer);
+        int i = obstacle_place(WIDTH/SIZE+5,HEIGHT/SIZE-2.5f,1);
+
+        aObstacles[i].bHasPower = fRNG < 0.8f || fPrevInterval < 0.8f;
+
+        fPrevInterval = fRNG;
+    }
+    fSpawnTimer -= delta;
 }
 
 void obstacle_draw(App *app){
@@ -63,9 +138,19 @@ void obstacle_draw(App *app){
         if (aObstacles[i].bIsAlive == false) continue;
 
         SDL_Color *sCol = &aObstacles[i].sColor;
-        SDL_Rect *rRegion = &aObstacles[i].rRegion; 
-
         csc(SDL_SetRenderDrawColor(app->renderer,sCol->r,sCol->g,sCol->b,sCol->a));
-        csc(SDL_RenderFillRect(app->renderer,rRegion));
+
+        SDL_FRect *rRegion = &aObstacles[i].rRegion; 
+        SDL_Rect rRect = FRectToRect(rRegion);
+        csc(SDL_RenderFillRect(app->renderer,&rRect));
+
+        if (!aObstacles[i].bIsFloor && aObstacles[i].bHasPower) {
+            SDL_Color *sPowerCol = &aObstacles[i].sPowerColor;
+            csc(SDL_SetRenderDrawColor(app->renderer,sPowerCol->r,sPowerCol->g,sPowerCol->b,sPowerCol->a));
+
+            SDL_FRect *rPowerup = &aObstacles[i].rPowerup; 
+            SDL_Rect rPowerRect = FRectToRect(rPowerup);
+            csc(SDL_RenderFillRect(app->renderer,&rPowerRect));
+        }
     }
 }

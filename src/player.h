@@ -4,7 +4,8 @@
 #include "main.h"
 
 #define SIZE 50
-#define GRAVITY 5.0f
+#define GRAVITY 20.0f
+#define JUMP_FORCE 10.0f
 
 void player_init(void);
 void player_update(float delta);

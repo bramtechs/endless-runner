@@ -10,3 +10,11 @@ SDL_Color hexToColor(int hex){
     color.b = (hex >> 8)  & 0xFF;
     return color;
 }
+
+SDL_Rect FRectToRect(SDL_FRect *rect){
+    int x = (int)rect->x;
+    int y = (int)rect->y;
+    int w = (int)rect->w;
+    int h = (int)rect->h;
+    return (SDL_Rect) { x, y, w, h };
+}
