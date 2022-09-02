@@ -2,7 +2,7 @@
 #define OBSTACLE_H
 
 #include "defs.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "main.h"
 
 // Rectangles that stop the player

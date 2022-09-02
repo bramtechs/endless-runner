@@ -2,7 +2,7 @@
 #include "defs.h"
 #include "math.h"
 #include "main.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 Obstacle aObstacles[MAX_OBSTACLES] = { false };
 float fOffsetX = 0.0f;

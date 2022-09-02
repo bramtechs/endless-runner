@@ -1,5 +1,5 @@
 #include "math.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 SDL_Color hexToColor(int hex){
     SDL_Color color;
