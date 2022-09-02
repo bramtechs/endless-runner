@@ -4,9 +4,12 @@
 #include "math.h"
 #include "player.h"
 #include "obstacle.h"
+#include <time.h>
+#include <stdlib.h>
 
 bool bIsRunning = true;
 SDL_Color sBg = { NULL };
+bool bHoldingJump = false;
 
 // check sdl code if not 0
 bool csc(int code){ 
@@ -29,6 +32,9 @@ void* csp(void* ptr){
 }
 
 int main(void){
+
+    // rng
+    srand(time(NULL));   // Initialization, should only be called once.
 
     // create the SDL2 window
     int nRenderFlags = SDL_RENDERER_ACCELERATED;
@@ -93,17 +99,24 @@ void handleInput(SDL_Event *event){
             //SDL_Log("%s",SDL_GetKeyName(sKey));
             switch (event->key.keysym.sym){
                 case SDLK_SPACE:
-                    SDL_Log("jump");
-                    player_jump();
+                    bHoldingJump = true;
                     break;
             }
             break;
-    	default:
-    		break;
+        case SDL_KEYUP:
+            switch (event->key.keysym.sym){
+                case SDLK_SPACE:
+                    bHoldingJump = false;
+                    break;
+            }
+            break;
     }
 }
 
 void update(float delta){
+    if (bHoldingJump){
+        player_jump();
+    }
     player_update(delta);
     obstacle_update(delta);
 }
