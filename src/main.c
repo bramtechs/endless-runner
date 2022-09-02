@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "main.h"
 #include "defs.h"
 #include "math.h"
@@ -90,9 +90,8 @@ void handleInput(SDL_Event *event){
     		exit(0);
     		break;
         case SDL_KEYDOWN:
-            SDL_Keycode sKey = event->key.keysym.sym;
             //SDL_Log("%s",SDL_GetKeyName(sKey));
-            switch (sKey){
+            switch (event->key.keysym.sym){
                 case SDLK_SPACE:
                     SDL_Log("jump");
                     player_jump();

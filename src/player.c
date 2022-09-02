@@ -3,7 +3,7 @@
 #include "main.h"
 #include "math.h"
 #include "obstacle.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 float fVelY = GRAVITY;
 

@@ -1,5 +1,3 @@
-set (SDL2_DIR ./libs/SDL2/cmake)
-
 cmake_minimum_required(VERSION 3.7)
 
 project(endless-runner-sdl2)

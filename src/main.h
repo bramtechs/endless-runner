@@ -1,7 +1,7 @@
 #ifndef MAIN_H 
 #define MAIN_H
 #include "defs.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 extern bool bIsRunning;
 
