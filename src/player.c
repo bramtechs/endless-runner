@@ -26,6 +26,7 @@ void player_update(float delta){
     }
 }
 
+// TODO make jump height not depend on framerate
 void player_jump(void){
     bool bTouchesPowerup = obstacle_overlaps_power(&rRegion);
     if (!bGrounded && !bTouchesPowerup) return;
@@ -34,7 +35,13 @@ void player_jump(void){
     bGrounded = false;
 }
 
-// TODO prevent odd bounce when landing
+// TODO make stomp force not depend on framerate
+void player_stomp(void){
+    if (bGrounded) return;
+    fVelY = STOMP_FORCE;
+    player_move(0.0f,fVelY);
+}
+
 bool player_move(float x, float y){
     SDL_FRect rPredict = { rRegion.x + x, rRegion.y + y, rRegion.w, rRegion.h };
 

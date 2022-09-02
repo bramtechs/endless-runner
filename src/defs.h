@@ -1,9 +1,9 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#define WIDTH 640
-#define HEIGHT 480
-#define FPS 60
+#define WIDTH 1280 
+#define HEIGHT 704
+#define MAX_FPS 60
 
 #define bool SDL_bool 
 #define byte char

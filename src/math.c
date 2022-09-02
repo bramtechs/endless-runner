@@ -18,3 +18,7 @@ SDL_Rect FRectToRect(SDL_FRect *rect){
     int h = (int)rect->h;
     return (SDL_Rect) { x, y, w, h };
 }
+
+int randIntRange(int min, int max){
+    return rand()%(max-min)+min;
+}

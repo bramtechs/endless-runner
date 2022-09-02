@@ -5,5 +5,6 @@
 
 SDL_Color hexToColor(int hex);
 SDL_Rect FRectToRect(SDL_FRect *rect);
+int randIntRange(int min, int max);
 
 #endif // MATH_H
