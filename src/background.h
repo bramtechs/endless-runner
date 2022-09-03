@@ -1,7 +1,6 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include <SDL2/SDL.h>
 #include "main.h"
 
 #define BG_LAYER_COUNT 5
