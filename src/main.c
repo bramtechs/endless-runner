@@ -5,6 +5,7 @@
 #include "player.h"
 #include "obstacle.h"
 #include "background.h"
+#include "particles.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -146,7 +147,9 @@ void update(float delta){
     if (bHoldingStomp){
         player_stomp();
     }
+
     background_update(delta);
+    particles_update(delta);
     player_update(delta);
     obstacle_update(delta);
 }
@@ -158,6 +161,7 @@ void draw(App *app){
     csc(SDL_RenderClear(app->renderer));
 
     background_draw(app);
+    particles_draw(app);
     player_draw(app);
     obstacle_draw(app);
 

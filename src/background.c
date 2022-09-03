@@ -36,9 +36,9 @@ void background_initLayer(int index){
 
         // set building color
         SDL_Color *sCol = &(sLayer->aColors[nColumn]);
-        sCol->r = randIntRange(180,255);
-        sCol->g = randIntRange(180,255);
-        sCol->b = randIntRange(180,255);
+        sCol->r = randIntRange(80,180);
+        sCol->g = randIntRange(80,180);
+        sCol->b = randIntRange(80,180);
         sCol->a = 255;
 
         nPenX += nWidth;

@@ -3,17 +3,19 @@
 #include "main.h"
 #include "math.h"
 #include "obstacle.h"
+#include "particles.h"
 #include <SDL2/SDL.h>
 
 float fVelY = GRAVITY;
 bool bGrounded = false;
 
-SDL_FRect rRegion = { SIZE, HEIGHT/2.0f-SIZE*2.0f, SIZE, SIZE };
+SDL_FRect rRegion = { SIZE*4, HEIGHT/2.0f-SIZE*2.0f, SIZE, SIZE };
 SDL_Color sCol = { NULL }; 
+SDL_Color sTrailCol = { NULL }; 
 
 void player_init(void){
     SDL_Log("Created player");
-    sCol = hexToColor(0x557722FF);
+    sCol = hexToColor(0x22CC22FF);
 }
 
 void player_update(float delta){
@@ -24,6 +26,14 @@ void player_update(float delta){
         fVelY = 0.0f;
         bGrounded = true;
     }
+
+    // spawn trail
+    float y = rand()%((int)rRegion.h)+rRegion.y;
+    SDL_FPoint pSpawn = {rRegion.x,y};
+    SDL_FPoint pVel = randVelocity(30);
+    pVel.x -= SPEED;
+
+    particles_spawn(&pSpawn,&pVel, 1.0f, 8.0f,&sCol);
 }
 
 // TODO make jump height not depend on framerate

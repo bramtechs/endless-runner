@@ -22,3 +22,15 @@ SDL_Rect FRectToRect(SDL_FRect *rect){
 int randIntRange(int min, int max){
     return rand()%(max-min)+min;
 }
+
+SDL_FPoint randVelocity(int power){
+    float x = rand()%power*2.f-power; 
+    float y = rand()%power*2.f-power;
+    return (SDL_FPoint) { x , y };
+}
+
+SDL_FPoint centerOfFRect(SDL_FRect *rect){
+    float x = rect->x+rect->w*0.5f;
+    float y = rect->y+rect->h*0.5f;
+    return (SDL_FPoint) { x,y };
+}
