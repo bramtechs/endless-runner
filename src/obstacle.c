@@ -2,7 +2,6 @@
 #include "defs.h"
 #include "math.h"
 #include "main.h"
-#include <SDL2/SDL.h>
 
 Obstacle aObstacles[MAX_OBSTACLES] = { false };
 float fOffsetX = 0.0f;
@@ -12,24 +11,23 @@ SDL_Color sPowerColor = { NULL };
 
 void obstacle_init(void){
 
+    // generate color
+    sPowerColor = hexToColor(0xFFBB00FF);
+
     // amount of cubes to place
     int nCount = WIDTH / SIZE + 5;
 
     for (int i = 0; i < nCount; i++){
         int nX = i;
         int nY = HEIGHT/SIZE-1;
-        int i = obstacle_place(nX,nY,i);
-        aObstacles[i].bIsFloor = true;
-        aObstacles[i].rRegion.w += 10; // hide gaps
+        int j = obstacle_place(nX,nY,i);
+        aObstacles[j].bIsFloor = true;
+        aObstacles[j].rRegion.w += 10; // hide gaps
     }
     SDL_Log("Placed down a floor of %d cubes",nCount);
 }
 
 int obstacle_place(float x, float y, int index){
-    if (sPowerColor.r == NULL){
-        sPowerColor = hexToColor(0xFFBB00FF);
-    }
-
     // find empty obstacle
     for (int i = 0; i < MAX_OBSTACLES; i++){
         if (aObstacles[i].bIsAlive == true) continue;

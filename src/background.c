@@ -3,7 +3,6 @@
 #include "math.h"
 #include "main.h"
 #include <assert.h>
-#include <SDL2/SDL.h>
 
 BGLayer aLayers[BG_LAYER_COUNT];
 

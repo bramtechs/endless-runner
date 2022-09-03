@@ -4,7 +4,6 @@
 #include "math.h"
 #include "obstacle.h"
 #include "particles.h"
-#include <SDL2/SDL.h>
 
 float fVelY = GRAVITY;
 bool bGrounded = false;

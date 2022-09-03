@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include "main.h"
 #include "defs.h"
 #include "math.h"
@@ -122,7 +121,7 @@ void handleInput(SDL_Event *event){
                 case SDLK_SPACE:
                     bHoldingJump = true;
                     break;
-                case SDLK_LCTRL:
+                case SDLK_TAB:
                     bHoldingStomp = true;
                     break;
             }
@@ -132,7 +131,7 @@ void handleInput(SDL_Event *event){
                 case SDLK_SPACE:
                     bHoldingJump = false;
                     break;
-                case SDLK_LCTRL:
+                case SDLK_TAB:
                     bHoldingStomp = false;
                     break;
             }
