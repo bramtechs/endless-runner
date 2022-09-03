@@ -6,6 +6,7 @@
 Obstacle aObstacles[MAX_OBSTACLES] = { false };
 float fOffsetX = 0.0f;
 float fSpawnTimer = 3.0f;
+float fPrevInterval = 0.0f;
 
 SDL_Color sPowerColor = { NULL };
 
@@ -88,25 +89,33 @@ bool obstacle_overlaps_power(const SDL_FRect *rect){
     return false;
 }
 
-float fPrevInterval = 0.0f;
 
 void obstacle_update(float delta){
+    float fDeltaX = SPEED*delta;
+
     // move all the obstacles to the left
     for (int i = 0; i < MAX_OBSTACLES; i++){
         if (aObstacles[i].bIsAlive == false) continue;
         Obstacle *sObs = &aObstacles[i];
 
-        float fDeltaX = SPEED*delta;
-        sObs->rRegion.x -= fDeltaX;
-        sObs->rPowerup.x -= fDeltaX;
-        if (sObs->rRegion.x < -20-SIZE){
-            if (sObs->bIsFloor){
-                sObs->rRegion.x = WIDTH+SIZE;
-            }else{
-                sObs->bIsAlive = false;
-                SDL_Log("Cleaned up block");
+        if (sObs->bIsFloor) {
+            sObs->rRegion.x = fOffsetX+i*SIZE;
+        }
+        else {
+            sObs->rRegion.x -= fDeltaX;
+            sObs->rPowerup.x -= fDeltaX;
+
+            if (sObs->rRegion.x < -20 - SIZE) {
+			    sObs->bIsAlive = false;
+			    SDL_Log("Cleaned up block");
             }
         }
+    }
+
+    // optical illusion
+    fOffsetX -= fDeltaX;
+    if (fOffsetX < -SIZE * 2) {
+        fOffsetX += SIZE * 2;
     }
 
     // spawn blocks
