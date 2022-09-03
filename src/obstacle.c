@@ -13,7 +13,7 @@ SDL_Color sPowerColor = { NULL };
 void obstacle_init(void){
 
     // amount of cubes to place
-    int nCount = WIDTH / SIZE + 4;
+    int nCount = WIDTH / SIZE + 5;
 
     for (int i = 0; i < nCount; i++){
         int nX = i;

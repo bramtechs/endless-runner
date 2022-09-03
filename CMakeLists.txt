@@ -12,6 +12,7 @@ add_executable(SDL2Game
     src/player.c
     src/obstacle.c
     src/background.c
+    src/particles.c
     src/gui.c
 )
 target_link_libraries(SDL2Game ${SDL2_LIBRARIES})
