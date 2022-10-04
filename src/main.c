@@ -5,6 +5,7 @@
 #include "obstacle.h"
 #include "background.h"
 #include "particles.h"
+#include "fade.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -68,6 +69,7 @@ int main(void){
     obstacle_init();
     player_init();
     background_init();
+    fade_init();
 
     // main loop
     SDL_Event event;
@@ -149,6 +151,7 @@ void update(float delta){
     }
 
     background_update(delta);
+    fade_update(delta);
     particles_update(delta);
     player_update(delta);
     obstacle_update(delta);
@@ -164,6 +167,7 @@ void draw(App *app){
     particles_draw(app);
     player_draw(app);
     obstacle_draw(app);
+    fade_draw(app);
 
     // show image
     SDL_RenderPresent(app->renderer);

@@ -1,4 +1,5 @@
 #include "obstacle.h"
+#include "player.h"
 #include "defs.h"
 #include "math.h"
 #include "main.h"
@@ -8,9 +9,12 @@ float fOffsetX = 0.0f;
 float fSpawnTimer = 3.0f;
 float fPrevInterval = 0.0f;
 
+bool bShouldStop = false;
+
 SDL_Color sPowerColor = { NULL };
 
 void obstacle_init(void){
+    bShouldStop = false;
 
     // generate color
     sPowerColor = hexToColor(0xFFBB00FF);
@@ -26,6 +30,10 @@ void obstacle_init(void){
         aObstacles[j].rRegion.w += 10; // hide gaps
     }
     SDL_Log("Placed down a floor of %d cubes",nCount);
+}
+
+void obstacle_stop(void){
+    bShouldStop = true;
 }
 
 int obstacle_place(float x, float y, int index){
@@ -107,6 +115,10 @@ bool obstacle_overlaps_power(const SDL_FRect *rect){
 
 
 void obstacle_update(float delta){
+    if (bShouldStop){ // don't do anything if ded
+        return;
+    }
+
     float fDeltaX = SPEED*delta;
 
     // move all the obstacles to the left
