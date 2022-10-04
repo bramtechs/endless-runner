@@ -53,7 +53,23 @@ int obstacle_place(float x, float y, int index){
     return 0;
 }
 
-bool obstacle_overlaps(const SDL_FRect *rect, float *snapY){
+bool obstacle_overlaps(const SDL_FRect *rect){
+    for (int i = 0; i < MAX_OBSTACLES; i++){
+        if (aObstacles[i].bIsAlive == false) continue;
+        if (aObstacles[i].bIsFloor == true) continue;
+
+        SDL_FRect *rRegion = &aObstacles[i].rRegion; 
+        // TODO this is awful, implement own function
+        SDL_Rect rA = FRectToRect(rRegion);
+        SDL_Rect rB = FRectToRect(rect);
+        if (SDL_HasIntersection(&rA, &rB)){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool obstacle_overlaps_floor(const SDL_FRect *rect, float *snapY){
     for (int i = 0; i < MAX_OBSTACLES; i++){
         if (aObstacles[i].bIsAlive == false) continue;
         if (aObstacles[i].bIsFloor == false) continue;

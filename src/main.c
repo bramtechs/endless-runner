@@ -59,11 +59,12 @@ int main(void){
 
     // initialize renderer
 	sApp.renderer = SDL_CreateRenderer(sApp.window, -1, nRenderFlags);
+    SDL_SetRenderDrawBlendMode(sApp.renderer,SDL_BLENDMODE_BLEND);
 
     SDL_Log("Created game of size %d by %d",WIDTH,HEIGHT);
 
     // init game components
-    sBg = hexToColor(0x551122FF);
+    sBg = hexToColor(0xd4e4ff);
     obstacle_init();
     player_init();
     background_init();
