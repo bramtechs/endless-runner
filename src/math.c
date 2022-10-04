@@ -34,3 +34,13 @@ SDL_FPoint centerOfFRect(SDL_FRect *rect){
     float y = rect->y+rect->h*0.5f;
     return (SDL_FPoint) { x,y };
 }
+
+int clamp(int val, int min, int max){
+    if (val < min){
+        return min;
+    }
+    if (val > max){
+        return max;
+    }
+    return val;
+}

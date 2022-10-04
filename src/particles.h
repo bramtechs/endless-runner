@@ -1,7 +1,7 @@
 #ifndef PARTICLES_H
 #define PARTICLES_H
 
-#define MAX_PARTICLES 256
+#define MAX_PARTICLES 16384
 
 #include "main.h"
 
