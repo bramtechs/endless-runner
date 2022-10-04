@@ -22,6 +22,7 @@ typedef struct {
 } Obstacle;
 
 void obstacle_init(void);
+void obstacle_stop(void);
 
 bool obstacle_overlaps(const SDL_FRect *rect);
 bool obstacle_overlaps_floor(const SDL_FRect *rect, float *snapY);

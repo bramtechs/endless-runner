@@ -24,6 +24,9 @@ add_executable(SDL2Game
     src/background.c
     src/background.h
 
+    src/fade.c
+    src/fade.h
+
     src/particles.c
     src/particles.h
 
