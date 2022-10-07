@@ -5,6 +5,7 @@
 #include "obstacle.h"
 #include "background.h"
 #include "particles.h"
+#include "gui.h"
 #include "fade.h"
 #include <time.h>
 #include <stdlib.h>
@@ -33,7 +34,7 @@ bool csc(int code){
 // check sdl pointer
 void* csp(void* ptr){
     if (ptr == NULL){
-        SDL_LogError(0,"SDL didn't return pointer");
+        SDL_LogError(0,"SDL didn't return pointer error: %s",SDL_GetError());
         exit(1);
         return NULL;
     }
@@ -66,6 +67,7 @@ int main(void){
 
     // init game components
     sBg = hexToColor(0xd4e4ff);
+    gui_init(&sApp);
     obstacle_init();
     player_init();
     background_init();
@@ -106,6 +108,7 @@ int main(void){
         SDL_Delay(1000 / MAX_FPS);
     }
 
+    gui_dispose();
     SDL_Log("Shutting down...");
 
     return 0;
@@ -155,6 +158,7 @@ void update(float delta){
     particles_update(delta);
     player_update(delta);
     obstacle_update(delta);
+    gui_update(delta);
 }
 
 void draw(App *app){
@@ -168,6 +172,7 @@ void draw(App *app){
     player_draw(app);
     obstacle_draw(app);
     fade_draw(app);
+    gui_draw(app);
 
     // show image
     SDL_RenderPresent(app->renderer);

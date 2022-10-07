@@ -4,8 +4,10 @@
 
 #if defined(__linux__)
 	#include <SDL2/SDL.h>
+	#include <SDL2/SDL_ttf.h>
 #elif defined(_WIN64)
 	#include <SDL.h>
+	#include <SDL_ttf.h>
 #endif
 
 extern bool bIsRunning;
