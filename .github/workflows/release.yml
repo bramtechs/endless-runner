@@ -1,0 +1,29 @@
+---
+name: "release"
+
+on:
+  push:
+    branches:
+      main
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Clone the repo"
+        uses: actions/checkout@v3
+      - name: "Install dependencies"
+        run: sh install-deps.LINUX.sh 
+      - name: "Compile program"
+        run: sh dist
+      - name: "Upload game executable"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "dev-${{ github.run_id }}-${{ github.run_attempt }}"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            build/sdl2-endless-runner.zip 
