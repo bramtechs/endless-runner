@@ -5,6 +5,7 @@
 #include "obstacle.h"
 #include "particles.h"
 #include "fade.h"
+#include "gui.h"
 
 float fVelY = GRAVITY;
 bool bGrounded = false;
@@ -38,6 +39,7 @@ void player_update(float delta){
             bIsAlive = false;
             fade_run();
             obstacle_stop();
+            gui_stop();
         }
 
         // spawn trail
