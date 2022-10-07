@@ -1,0 +1,11 @@
+#!/bin/bash
+set -xe
+
+mkdir -p build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+
+# package executable
+zip sdl2-endless-runner.zip -r assets endless-runner-sdl2
+unzip -l sdl2-endless-runner.zip
