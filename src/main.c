@@ -26,7 +26,6 @@ bool csc(int code){
     if (code != 0){
         SDL_LogError(code,"SDL function failed %d -> %s",code,SDL_GetError());
         exit(1);
-        return false;
     }
     return true;
 }
@@ -36,7 +35,6 @@ void* csp(void* ptr){
     if (ptr == NULL){
         SDL_LogError(0,"SDL didn't return pointer error: %s",SDL_GetError());
         exit(1);
-        return NULL;
     }
     return ptr;
 }
@@ -52,7 +50,7 @@ int main(void){
 
     csc(SDL_Init(SDL_INIT_VIDEO));
 
-    // initalize window
+    // initialize window
     App sApp;
 
     sApp.window = SDL_CreateWindow("SDL Endless Runner", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, nWindowFlags);

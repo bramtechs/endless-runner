@@ -6,7 +6,7 @@
 
 BGLayer aLayers[BG_LAYER_COUNT];
 
-void background_init(){
+void background_init(void){
    for (int i = 0; i < BG_LAYER_COUNT; i++){
         background_initLayer(i);
    }

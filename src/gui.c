@@ -48,5 +48,5 @@ void gui_draw(App* app){
     SDL_DestroyTexture(sScoreTexture);
 }
 
-void gui_dispose(){
+void gui_dispose(void){
 }

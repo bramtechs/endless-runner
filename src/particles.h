@@ -13,7 +13,7 @@ typedef struct {
     SDL_Color sColor;
 } Particle;
 
-int particles_spawn(SDL_FPoint *pos, SDL_FPoint *vel,
+void particles_spawn(SDL_FPoint *pos, SDL_FPoint *vel,
         float lifetime, float size, SDL_Color *col);
 
 void particles_draw(App *app);
