@@ -22,7 +22,7 @@ typedef struct {
     SDL_Color aColors[BG_MAX];
 } BGLayer;
 
-void background_init();
+void background_init(void);
 void background_initLayer(int index);
 
 void background_update(float delta);
