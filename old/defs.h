@@ -1,7 +1,7 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#define WIDTH 1280 
+#define WIDTH 1280
 #define HEIGHT 704
 #define MAX_FPS 60
 
