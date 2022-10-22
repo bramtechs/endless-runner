@@ -1,8 +1,9 @@
-build 
-SDL2Game
-CMakeCache.txt
-CMakeFiles
-Makefile
-cmake_install.cmake
-/libs/SDL2
-/SDL2.zip
+.idea/
+.vscode/
+.vs/
+cmake-build-debug/
+bin/
+build/
+out/
+cmake/
+CMakeSettings.json
