@@ -5,8 +5,9 @@
 #include "player.h"
 #include "stdbool.h"
 #include "main.h"
+#include "obstacle.h"
 
-Player player_init(void) {
+Player player_init(ObstacleWorld *world) {
     TraceLog(LOG_INFO, "Initializing player...");
     float size = 50.0f;
     return (Player) {
@@ -18,6 +19,8 @@ Player player_init(void) {
             .isAlive = true,
             .opacity = 255.0f,
             .color = GetColor(0x00ff00ff),
+
+            .world = world,
     };
 }
 
@@ -44,7 +47,8 @@ void player_update_dead(Player *pl, float delta) {
 }
 
 void player_jump(Player *pl) {
-    if (player_grounded(pl) || obstacle_overlaps_powerup(&pl->region)){
+    //ObstacleWorld world = pl.
+    if (player_grounded(pl) || obstacle_overlaps(pl->world,&pl->region,FLOOR)){
         pl->vel.y = -pl->jumpForce;
         Vector2 offset = (Vector2) {0.0f, pl->vel.y};
         player_move(pl,&offset);
@@ -88,6 +92,6 @@ void player_move(Player *pl, Vector2 *offset) {
 bool player_grounded(Player *pl){
     Vector2 offset = (Vector2) {0.0f, pl->vel.y};
     Rectangle predict = {pl->region.x + offset.x, pl->region.y + offset.y, pl->region.width, pl->region.height};
-    return !obstacle_overlaps_floor(&predict);
+    return !obstacle_overlaps(pl->world, &predict, FLOOR);
 }
 

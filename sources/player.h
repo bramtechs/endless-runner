@@ -7,6 +7,7 @@
 
 #include "stdbool.h"
 #include "raylib.h"
+#include "obstacle.h"
 
 typedef struct {
     float gravity;
@@ -18,6 +19,8 @@ typedef struct {
     Color color;
     Color trailColor;
     bool isAlive;
+
+    ObstacleWorld* world;
 } Player;
 
 #define SIZE 50
@@ -25,7 +28,7 @@ typedef struct {
 #define JUMP_FORCE 10.0f
 #define STOMP_FORCE 15.0f
 
-Player player_init(void);
+Player player_init(ObstacleWorld *world);
 
 void player_update(Player *pl, float delta);
 

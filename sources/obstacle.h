@@ -35,6 +35,9 @@ typedef struct {
     float size;
     float floorSpeed;
     float speed;
+    float offsetX;
+    float spawnTimer;
+    float prevSpawnInterval;
     Obstacle obstacles[OBSTACLE_COUNT];
     Color powerupColor;
     Color color;

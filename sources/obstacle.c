@@ -10,9 +10,15 @@
 ObstacleWorld obstacle_init(void) {
     ObstacleWorld world = (ObstacleWorld) {
             .isRunning = true,
+
             .size = 64.0f,
             .floorSpeed = 6.0f,
             .speed = 500.0f,
+
+            .spawnTimer = 3,
+            .prevSpawnInterval = 0.0f,
+            .offsetX = 0.0f,
+
             .powerupColor = GetColor(0xFFBB00FF),
             .color = GetColor(0xAAAAAAFF),
             .colorAlt = GetColor(0xBBBBBBFF),
@@ -39,17 +45,18 @@ void obstacle_stop(ObstacleWorld *wo) {
 }
 
 void obstacle_run(ObstacleWorld *wo, float delta) {
-    float offsetX = wo->speed * delta;
+    float scaledDelta = wo->speed * delta;
+    wo->offsetX -= scaledDelta;
 
     for (int i = 0; i < OBSTACLE_COUNT; i++) {
         if (wo->obstacles[i].isActive) {
             Obstacle *obs = &wo->obstacles[i];
             if (obs->isFloor) {
                 float size = wo->size;
-                obs->region.x = offsetX + (float) i * size;
+                obs->region.x = wo->offsetX + (float) i * size;
             } else {
-                obs->region.x -= offsetX;
-                obs->powerup.region.y -= offsetX;
+                obs->region.x -= scaledDelta;
+                obs->powerup.region.y -= scaledDelta;
 
                 // cleanup when offscreen
                 if (obs->region.x < -20 - wo->size) {
@@ -59,6 +66,29 @@ void obstacle_run(ObstacleWorld *wo, float delta) {
             }
         }
     }
+
+    // optical illusion
+    float interval = wo->size * 2;
+    if (wo->offsetX < -interval) {
+        wo->offsetX += interval;
+    }
+    TraceLog(LOG_INFO,"%f",wo->offsetX);
+
+    // spawn block
+    if (wo->spawnTimer < 0.0f) {
+        float rng = GetRandomValue(0.3f, 3.0f);
+        wo->spawnTimer += rng; // TODO random
+
+        TraceLog(LOG_INFO, "Spawned obstacle. Next in %fs...", wo->spawnTimer);
+
+        Vector2 place = (Vector2) {SCREEN_WIDTH / wo->size + 5, SCREEN_HEIGHT / wo->size - 2};
+        int i = obstacle_place(wo, &place, 1);
+
+        wo->obstacles[i].hasPower = rng < 0.8f || wo->prevSpawnInterval < 0.8f;
+
+        wo->prevSpawnInterval = rng;
+    }
+    wo->spawnTimer -= delta;
 }
 
 void obstacle_update(ObstacleWorld *wo, float delta) {
