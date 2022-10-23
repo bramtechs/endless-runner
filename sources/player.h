@@ -19,6 +19,7 @@ typedef struct {
     Color color;
     Color trailColor;
     bool isAlive;
+    bool isGrounded;
 
     ObstacleWorld* world;
 } Player;
@@ -36,8 +37,6 @@ void player_draw(Player *pl);
 
 void player_stomp(Player *pl);
 
-void player_move(Player *pl, Vector2 *offset);
-
-bool player_grounded(Player *pl);
+bool player_move(Player *pl, Vector2 *offset);
 
 #endif //PLAYER_H
