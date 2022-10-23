@@ -6,7 +6,7 @@
 #define MAIN_H
 
 #define SCREEN_WIDTH (1280)
-#define SCREEN_HEIGHT (700)
+#define SCREEN_HEIGHT (720)
 #define MAX_FPS (60)
 #define FAST_MODE (true)
 

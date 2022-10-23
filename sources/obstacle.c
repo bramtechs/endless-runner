@@ -7,6 +7,20 @@
 #include "obstacle.h"
 #include "main.h"
 
+void obstacle_place_floor(ObstacleWorld *wo){
+    // spawn floor blocks
+    int count = SCREEN_WIDTH / wo->size + 5;
+
+    for (int x = 0; x < count; x++) {
+        int y = SCREEN_HEIGHT / wo->size;
+        Vector2 pos = (Vector2) {(float) x, 0.0f};
+        int j = obstacle_place(wo, &pos, x);
+        wo->obstacles[j].isFloor = true;
+        wo->obstacles[j].region.width += 10; // hide gaps
+    }
+    TraceLog(LOG_INFO, "Placed down a floor of %d cubes", count);
+}
+
 ObstacleWorld obstacle_init(void) {
     ObstacleWorld world = (ObstacleWorld) {
             .isRunning = true,
@@ -24,19 +38,20 @@ ObstacleWorld obstacle_init(void) {
             .colorAlt = GetColor(0xBBBBBBFF),
     };
     // TODO prevent copying data
+    obstacle_place_floor(&world);
 
-    int count = SCREEN_WIDTH / world.size + 5;
-
-    for (int x = 0; x < count; x++) {
-        int y = SCREEN_HEIGHT / world.size - 1;
-        Vector2 pos = (Vector2) {(float) x, (float) y};
-        int j = obstacle_place(&world, &pos, x);
-        world.obstacles[j].isFloor = true;
-        world.obstacles[j].region.width += 10; // hide gaps
-    }
-
-    TraceLog(LOG_INFO, "Placed down a floor of %d cubes", count);
     return world;
+}
+
+void obstacle_place_block(ObstacleWorld *wo){
+    TraceLog(LOG_INFO, "Spawned obstacle. Next in %fs...", wo->spawnTimer);
+    float rng = (float)GetRandomValue(3, 30)*0.1f;
+
+    Vector2 place = (Vector2) {SCREEN_WIDTH / wo->size + 5, 1};
+    int i = obstacle_place(wo, &place, 1);
+
+    wo->obstacles[i].hasPower = rng < 0.8f || wo->prevSpawnInterval < 0.8f;
+    wo->prevSpawnInterval = rng;
 }
 
 void obstacle_stop(ObstacleWorld *wo) {
@@ -72,21 +87,13 @@ void obstacle_run(ObstacleWorld *wo, float delta) {
     if (wo->offsetX < -interval) {
         wo->offsetX += interval;
     }
-    TraceLog(LOG_INFO,"%f",wo->offsetX);
 
-    // spawn block
+    // spawn block every once in a while
     if (wo->spawnTimer < 0.0f) {
-        float rng = GetRandomValue(0.3f, 3.0f);
+        float rng = (float)GetRandomValue(3, 30)*0.1f;
         wo->spawnTimer += rng; // TODO random
 
-        TraceLog(LOG_INFO, "Spawned obstacle. Next in %fs...", wo->spawnTimer);
-
-        Vector2 place = (Vector2) {SCREEN_WIDTH / wo->size + 5, SCREEN_HEIGHT / wo->size - 2};
-        int i = obstacle_place(wo, &place, 1);
-
-        wo->obstacles[i].hasPower = rng < 0.8f || wo->prevSpawnInterval < 0.8f;
-
-        wo->prevSpawnInterval = rng;
+        obstacle_place_block(wo);
     }
     wo->spawnTimer -= delta;
 }
@@ -96,7 +103,6 @@ void obstacle_update(ObstacleWorld *wo, float delta) {
         obstacle_run(wo, delta);
     }
 }
-
 
 void obstacle_draw(ObstacleWorld *wo) {
     for (int i = 0; i < OBSTACLE_COUNT; i++) {
@@ -116,7 +122,7 @@ int obstacle_place(ObstacleWorld *wo, Vector2 *pos, int index) {
         Obstacle *obs = &wo->obstacles[i];
         if (wo->obstacles[i].isActive == false) {
             float x = pos->x * wo->size;
-            float y = pos->y * wo->size;
+            float y = SCREEN_HEIGHT - (pos->y + 1) * wo->size;
 
             Color col = index % 2 == 0 ? wo->color : wo->colorAlt;
             Rectangle region = (Rectangle) {x, y, wo->size, wo->size};

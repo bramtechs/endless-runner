@@ -5,6 +5,7 @@
 #include "meth.h"
 #include "main.h"
 #include "player.h"
+#include "background.h"
 
 #define WINDOW_TITLE "Window title"
 
@@ -16,19 +17,25 @@ int main(void) {
     RenderTexture2D target = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
     SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
 
+    Color bgColor = GetColor(0XD4E4FF);
+
+    Background bg = background_init();
     ObstacleWorld world = obstacle_init();
     Player player = player_init(&world);
 
     while (!WindowShouldClose()) {
         // update
         float delta = GetFrameTime();
-        player_update(&player,delta);
+
+        background_update(&bg, delta);
+        player_update(&player, delta);
         obstacle_update(&world, delta);
 
         BeginTextureMode(target);
 
-        ClearBackground(BLACK);
+        ClearBackground(bgColor);
 
+        background_draw(&bg);
         obstacle_draw(&world);
         player_draw(&player);
 
@@ -38,12 +45,15 @@ int main(void) {
 
         ClearBackground(BLACK);
 
-        float scale = MIN((float)GetScreenWidth()/SCREEN_WIDTH, (float)GetScreenHeight()/SCREEN_HEIGHT);
+        float scale = MIN((float) GetScreenWidth() / SCREEN_WIDTH, (float) GetScreenHeight() / SCREEN_HEIGHT);
 
         // Draw render texture to screen, properly scaled
-        DrawTexturePro(target.texture, (Rectangle){ 0.0f, 0.0f, (float)target.texture.width, (float)-target.texture.height },
-                       (Rectangle){ (GetScreenWidth() - ((float)SCREEN_WIDTH*scale))*0.5f, (GetScreenHeight() - ((float)SCREEN_HEIGHT*scale))*0.5f,
-                                    (float)SCREEN_WIDTH*scale, (float)SCREEN_HEIGHT*scale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
+        DrawTexturePro(target.texture,
+                       (Rectangle) {0.0f, 0.0f, (float) target.texture.width, (float) -target.texture.height},
+                       (Rectangle) {((float) GetScreenWidth() - ((float) SCREEN_WIDTH * scale)) * 0.5f,
+                                    ((float) GetScreenHeight() - ((float) SCREEN_HEIGHT * scale)) * 0.5f,
+                                    (float) SCREEN_WIDTH * scale, (float) SCREEN_HEIGHT * scale}, (Vector2) {0, 0},
+                       0.0f, WHITE);
 
         EndDrawing();
     }
