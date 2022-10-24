@@ -6,13 +6,11 @@
 #include "main.h"
 #include "player.h"
 #include "background.h"
-
-#define WINDOW_TITLE "Window title"
+#include "particle.h"
 
 int main(void) {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
-    SetWindowTitle("Endless Runner");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Endless Runner");
     SetTargetFPS(60);
 
     RenderTexture2D target = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -21,8 +19,9 @@ int main(void) {
     Color bgColor = GetColor(0XD4E4FF);
 
     Background bg = background_init();
+    ParticleWorld pw = particle_init();
     ObstacleWorld world = obstacle_init();
-    Player player = player_init(&world);
+    Player player = player_init(&world,&pw);
 
     while (!WindowShouldClose()) {
         // update
@@ -31,6 +30,7 @@ int main(void) {
         background_update(&bg, delta);
         player_update(&player, delta);
         obstacle_update(&world, delta);
+        particle_update(&pw, delta);
 
         BeginTextureMode(target);
 
@@ -39,6 +39,7 @@ int main(void) {
         background_draw(&bg);
         obstacle_draw(&world);
         player_draw(&player);
+        particle_draw(&pw);
 
         EndTextureMode();
 

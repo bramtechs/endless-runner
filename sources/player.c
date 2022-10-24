@@ -5,9 +5,11 @@
 #include "player.h"
 #include "stdbool.h"
 #include "main.h"
+#include "meth.h"
 #include "obstacle.h"
+#include "particle.h"
 
-Player player_init(ObstacleWorld *world) {
+Player player_init(ObstacleWorld *world, ParticleWorld *particles) {
     TraceLog(LOG_INFO, "Initializing player...");
     float size = 50.0f;
     return (Player) {
@@ -22,33 +24,43 @@ Player player_init(ObstacleWorld *world) {
             .isGrounded = false,
 
             .world = world,
+            .particles = particles,
     };
 }
 
 void player_update_alive(Player *pl, float delta) {
     pl->vel.y += delta * pl->gravity;
 
-    Vector2 downwards = (Vector2) { 0.0f, pl->vel.y};
-    if (!player_move(pl,&downwards)) {
+    Vector2 downwards = (Vector2) {0.0f, pl->vel.y};
+    if (!player_move(pl, &downwards)) {
         pl->vel.y = 0.0f;
         pl->isGrounded = true;
     }
 
-    if (obstacle_overlaps(pl->world,&pl->region,BLOCK)){
+    // check death
+    if (obstacle_overlaps(pl->world, &pl->region, BLOCK)) {
         pl->isAlive = false;
     }
+
+    // spawn trail of particles
+    float y = (float) GetRandomValue((int) pl->region.y, (int) (pl->region.y + pl->region.height));
+    Vector2 spawn = {pl->region.x + 15, y};
+    Vector2 vel = randVelocity(30);
+    vel.x -= pl->world->speed;
+
+    particle_spawn(pl->particles, &spawn, &vel, 1.0f, 8.0f, &pl->color);
 }
 
 void player_update_dead(Player *pl, float delta) {
-     // TODO
+    // TODO
 }
 
 void player_jump(Player *pl) {
     //ObstacleWorld world = pl.
-    if (pl->isGrounded){
+    if (pl->isGrounded) {
         pl->vel.y = -pl->jumpForce;
         Vector2 offset = (Vector2) {0.0f, pl->vel.y};
-        player_move(pl,&offset);
+        player_move(pl, &offset);
         pl->isGrounded = false;
     }
 }
@@ -57,16 +69,16 @@ void player_stomp(Player *pl) {
     if (!pl->isGrounded) {
         pl->vel.y = pl->stompForce;
         Vector2 offset = (Vector2) {0.0f, pl->vel.y};
-        player_move(pl,&offset);
+        player_move(pl, &offset);
     }
 }
 
 void player_update(Player *pl, float delta) {
     // check key inputs
-    if (IsKeyDown(KEY_SPACE)){
+    if (IsKeyDown(KEY_SPACE)) {
         player_jump(pl);
     }
-    if (IsKeyPressed(KEY_TAB)){
+    if (IsKeyPressed(KEY_TAB)) {
         player_stomp(pl);
     }
 
@@ -78,17 +90,17 @@ void player_update(Player *pl, float delta) {
 }
 
 void player_draw(Player *pl) {
-    if (pl->isAlive){
-        DrawRectangleRec(pl->region,pl->color);
+    if (pl->isAlive) {
+        DrawRectangleRec(pl->region, pl->color);
     }
 }
 
 bool player_move(Player *pl, Vector2 *offset) {
     Rectangle predict = {pl->region.x + offset->x, pl->region.y + offset->y, pl->region.width, pl->region.height};
 
-    if (obstacle_overlaps(pl->world,&predict,FLOOR)){
-       return false;
-    }else{
+    if (obstacle_overlaps(pl->world, &predict, FLOOR)) {
+        return false;
+    } else {
         pl->region.x += offset->x;
         pl->region.y += offset->y;
         return true;

@@ -2,7 +2,6 @@
 // Created by bram on 10/22/22.
 //
 #include <stdbool.h>
-#include <stdio.h>
 #include <assert.h>
 #include "obstacle.h"
 #include "main.h"

@@ -6,7 +6,7 @@
 Particle aParticles[MAX_PARTICLES] = {false};
 int nParticleCount;
 
-void particles_spawn(SDL_FPoint *pos, SDL_FPoint *vel,
+void particle_spawn(SDL_FPoint *pos, SDL_FPoint *vel,
                     float lifetime, float size, SDL_Color *col) {
 
     // check for free slot
@@ -31,7 +31,7 @@ void particles_spawn(SDL_FPoint *pos, SDL_FPoint *vel,
     SDL_Log("Not enough particles");
 }
 
-void particles_update(float delta) {
+void particle_update(float delta) {
     for (int i = 0; i < MAX_PARTICLES; i++) {
         Particle *fPart = &(aParticles[i]);
         if (fPart->bIsAlive == false) continue;
@@ -48,7 +48,7 @@ void particles_update(float delta) {
     }
 }
 
-void particles_draw(App *app) {
+void particle_draw(App *app) {
     for (int i = 0; i < MAX_PARTICLES; i++) {
         Particle *fPart = &(aParticles[i]);
         if (fPart->bIsAlive == false) continue;
