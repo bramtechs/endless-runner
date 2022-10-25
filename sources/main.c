@@ -9,7 +9,7 @@
 #include "particle.h"
 
 int main(void) {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_ALWAYS_RUN);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Endless Runner");
     SetTargetFPS(60);
 
@@ -23,9 +23,12 @@ int main(void) {
     ObstacleWorld world = obstacle_init();
     Player player = player_init(&world,&pw);
 
+    // GetFrameTime() doesn't work when window minimized
+    float delta = 0.0f;
+
     while (!WindowShouldClose()) {
         // update
-        float delta = GetFrameTime();
+        double startTime = GetTime();
 
         background_update(&bg, delta);
         player_update(&player, delta);
@@ -40,6 +43,8 @@ int main(void) {
         obstacle_draw(&world);
         player_draw(&player);
         particle_draw(&pw);
+
+        DrawFPS(0,0);
 
         EndTextureMode();
 
@@ -58,6 +63,8 @@ int main(void) {
                        0.0f, WHITE);
 
         EndDrawing();
+
+        delta = (float)(GetTime()-startTime);
     }
 
     CloseWindow();

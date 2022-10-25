@@ -23,12 +23,10 @@ typedef struct {
 
     ObstacleWorld* world;
     ParticleWorld* particles;
-} Player;
 
-#define SIZE 50
-#define GRAVITY 20.0f
-#define JUMP_FORCE 10.0f
-#define STOMP_FORCE 15.0f
+    float timer;
+    float trailInterval;
+} Player;
 
 Player player_init(ObstacleWorld *world, ParticleWorld *particles);
 

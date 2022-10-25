@@ -17,7 +17,7 @@ Player player_init(ObstacleWorld *world, ParticleWorld *particles) {
             .jumpForce = 10.0f,
             .stompForce = 15.0f,
             .opacity = 255.0f,
-            .region = (Rectangle) {size * 4.0f, SCREEN_HEIGHT * 0.5f - SIZE * 2.0f, size, size},
+            .region = (Rectangle) {size * 4.0f, SCREEN_HEIGHT * 0.5f - size * 2.0f, size, size},
             .vel = (Vector2) {0},
             .color = GetColor(0x00ff00ff),
             .isAlive = true,
@@ -25,6 +25,9 @@ Player player_init(ObstacleWorld *world, ParticleWorld *particles) {
 
             .world = world,
             .particles = particles,
+
+            .timer = 0.0f,
+            .trailInterval = 0.01f,
     };
 }
 
@@ -43,12 +46,16 @@ void player_update_alive(Player *pl, float delta) {
     }
 
     // spawn trail of particles
-    float y = (float) GetRandomValue((int) pl->region.y, (int) (pl->region.y + pl->region.height));
-    Vector2 spawn = {pl->region.x + 15, y};
-    Vector2 vel = randVelocity(30);
-    vel.x -= pl->world->speed;
+    if (pl->timer > pl->trailInterval) {
+        pl->timer -= pl->trailInterval;
+        float y = (float) GetRandomValue((int) pl->region.y, (int) (pl->region.y + pl->region.height));
+        Vector2 spawn = {pl->region.x + 15, y};
+        Vector2 vel = randVelocity(30);
+        vel.x -= pl->world->speed;
+        particle_spawn(pl->particles, &spawn, &vel, 1.0f, 8.0f, &pl->color);
+    }
 
-    particle_spawn(pl->particles, &spawn, &vel, 1.0f, 8.0f, &pl->color);
+    pl->timer += delta;
 }
 
 void player_update_dead(Player *pl, float delta) {
