@@ -7,6 +7,7 @@
 #include "player.h"
 #include "background.h"
 #include "particle.h"
+#include "gui.h"
 
 int main(void) {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_ALWAYS_RUN);
@@ -21,7 +22,8 @@ int main(void) {
     Background bg = background_init();
     ParticleWorld pw = particle_init();
     ObstacleWorld world = obstacle_init();
-    Player player = player_init(&world,&pw);
+    GUI gui = gui_init();
+    Player player = player_init(&world,&pw,&gui);
 
     // GetFrameTime() doesn't work when window minimized
     float delta = 0.0f;
@@ -34,6 +36,7 @@ int main(void) {
         player_update(&player, delta);
         obstacle_update(&world, delta);
         particle_update(&pw, delta);
+        gui_update(&gui,delta);
 
         BeginTextureMode(target);
 
@@ -43,6 +46,7 @@ int main(void) {
         obstacle_draw(&world);
         player_draw(&player);
         particle_draw(&pw);
+        gui_draw(&gui);
 
         DrawFPS(0,0);
 
@@ -67,6 +71,7 @@ int main(void) {
         delta = (float)(GetTime()-startTime);
     }
 
+    gui_dispose(&gui);
     CloseWindow();
 
     return 0;

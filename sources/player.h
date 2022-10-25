@@ -9,6 +9,7 @@
 #include "raylib.h"
 #include "obstacle.h"
 #include "particle.h"
+#include "gui.h"
 
 typedef struct {
     float gravity;
@@ -23,12 +24,13 @@ typedef struct {
 
     ObstacleWorld* world;
     ParticleWorld* particles;
+    GUI* gui;
 
     float timer;
     float trailInterval;
 } Player;
 
-Player player_init(ObstacleWorld *world, ParticleWorld *particles);
+Player player_init(ObstacleWorld *world, ParticleWorld *particles, GUI* gui);
 
 void player_update(Player *pl, float delta);
 

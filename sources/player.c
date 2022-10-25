@@ -9,7 +9,7 @@
 #include "obstacle.h"
 #include "particle.h"
 
-Player player_init(ObstacleWorld *world, ParticleWorld *particles) {
+Player player_init(ObstacleWorld *world, ParticleWorld *particles, GUI *gui) {
     TraceLog(LOG_INFO, "Initializing player...");
     float size = 50.0f;
     return (Player) {
@@ -25,6 +25,7 @@ Player player_init(ObstacleWorld *world, ParticleWorld *particles) {
 
             .world = world,
             .particles = particles,
+            .gui = gui,
 
             .timer = 0.0f,
             .trailInterval = 0.01f,
@@ -43,6 +44,7 @@ void player_update_alive(Player *pl, float delta) {
     // check death
     if (obstacle_overlaps(pl->world, &pl->region, BLOCK)) {
         pl->isAlive = false;
+        gui_stop(pl->gui);
     }
 
     // spawn trail of particles
