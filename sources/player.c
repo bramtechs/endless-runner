@@ -15,7 +15,7 @@ Player player_init(ObstacleWorld *world, ParticleWorld *particles, GUI *gui) {
     return (Player) {
             .gravity = 20.0f,
             .jumpForce = 10.0f,
-            .stompForce = 15.0f,
+            .stompForce = 30.0f,
             .opacity = 255.0f,
             .region = (Rectangle) {size * 4.0f, SCREEN_HEIGHT * 0.5f - size * 2.0f, size, size},
             .vel = (Vector2) {0},
@@ -66,7 +66,7 @@ void player_update_dead(Player *pl, float delta) {
 
 void player_jump(Player *pl) {
     //ObstacleWorld world = pl.
-    if (pl->isGrounded) {
+    if (pl->isGrounded || obstacle_overlaps(pl->world, &pl->region, POWERUP)) {
         pl->vel.y = -pl->jumpForce;
         Vector2 offset = (Vector2) {0.0f, pl->vel.y};
         player_move(pl, &offset);

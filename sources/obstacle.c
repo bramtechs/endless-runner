@@ -135,7 +135,7 @@ int obstacle_place(ObstacleWorld *wo, Vector2 *pos, int index) {
             obs->color = col;
 
             // initialize powerup on top
-            float margin = 32;
+            float margin = 40;
             float height = 1.8f * region.height;
             float powerSize = wo->size - margin;
             obs->powerup.region = (Rectangle) {obs->region.x + powerSize / 2.0f,
