@@ -6,7 +6,7 @@
 #include "obstacle.h"
 #include "main.h"
 
-void obstacle_place_floor(ObstacleWorld *wo){
+void obstacle_place_floor(ObstacleWorld *wo) {
     // spawn floor blocks
     int count = SCREEN_WIDTH / wo->size + 5;
 
@@ -42,9 +42,9 @@ ObstacleWorld obstacle_init(void) {
     return world;
 }
 
-void obstacle_place_block(ObstacleWorld *wo){
+void obstacle_place_block(ObstacleWorld *wo) {
     TraceLog(LOG_INFO, "Spawned obstacle. Next in %fs...", wo->spawnTimer);
-    float rng = (float)GetRandomValue(3, 30)*0.1f;
+    float rng = (float) GetRandomValue(3, 30) * 0.1f;
 
     Vector2 place = (Vector2) {SCREEN_WIDTH / wo->size + 5, 1};
     int i = obstacle_place(wo, &place, 1);
@@ -70,7 +70,7 @@ void obstacle_run(ObstacleWorld *wo, float delta) {
                 obs->region.x = wo->offsetX + (float) i * size;
             } else {
                 obs->region.x -= scaledDelta;
-                obs->powerup.region.y -= scaledDelta;
+                obs->powerup.region.x -= scaledDelta;
 
                 // cleanup when offscreen
                 if (obs->region.x < -20 - wo->size) {
@@ -89,7 +89,7 @@ void obstacle_run(ObstacleWorld *wo, float delta) {
 
     // spawn block every once in a while
     if (wo->spawnTimer < 0.0f) {
-        float rng = (float)GetRandomValue(3, 30)*0.1f;
+        float rng = (float) GetRandomValue(3, 30) * 0.1f;
         wo->spawnTimer += rng; // TODO random
 
         obstacle_place_block(wo);
@@ -109,6 +109,7 @@ void obstacle_draw(ObstacleWorld *wo) {
         if (obs->isActive) {
             DrawRectangleRec(obs->region, obs->color);
             if (!obs->isFloor && obs->hasPower) {
+                // TODO this is bad
                 DrawRectangleRec(obs->powerup.region, obs->powerup.color);
             }
         }
@@ -134,9 +135,11 @@ int obstacle_place(ObstacleWorld *wo, Vector2 *pos, int index) {
             obs->color = col;
 
             // initialize powerup on top
-            float margin = 20;
-            obs->powerup.region = (Rectangle) {x + margin, y - wo->size * 2.0f, wo->size - margin * 2.0f,
-                                               wo->size - margin * 2.0f};
+            float margin = 32;
+            float height = 1.8f * region.height;
+            float powerSize = wo->size - margin;
+            obs->powerup.region = (Rectangle) {obs->region.x + powerSize / 2.0f,
+                                               obs->region.y + powerSize / 2.0f - height, powerSize, powerSize};
             obs->powerup.color = wo->powerupColor;
             return i;
         }
