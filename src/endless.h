@@ -1,24 +1,31 @@
 #pragma once
 
+#ifdef LINUX
+#include <SDL2/SDL2.h>
+#else
+#include <SDL2/SDL2.h>
+#endif
+
 // main.c
-#define WIDTH 1280 
+#define WIDTH 1280
 #define HEIGHT 704
 #define MAX_FPS 60
 
-#define bool SDL_bool 
+#define bool SDL_bool
 #define byte char
-#define true SDL_TRUE 
-#define false SDL_FALSE 
+#define true SDL_TRUE
+#define false SDL_FALSE
 
 extern bool bIsRunning;
 
-typedef struct {
+typedef struct
+{
     SDL_Renderer *renderer;
     SDL_Window *window;
 } App;
 
 bool csc(int code);
-void* csp(void* ptr);
+void *csp(void *ptr);
 
 int main(void);
 void handleInput(SDL_Event *event);
@@ -38,24 +45,25 @@ SDL_FPoint randVelocity(int power);
 SDL_FPoint centerOfFRect(SDL_FRect *rect);
 
 // background.c
-#define bg_layer_count 5
+#define BG_LAYER_COUNT 5
 
-#define bg_width_max 256
-#define bg_width_min 80
+#define BG_WIDTH_MAX 256
+#define BG_WIDTH_MIN 80
 
-#define bg_height_max 700 
-#define bg_height_min 150
+#define BG_HEIGHT_MAX 700
+#define BG_HEIGHT_MIN 150
 
-#define bg_max 256
+#define BG_MAX 256
 
-#define bg_speed 32.0f
+#define BG_SPEED 32.0f
 
-#define size 50
+#define SIZE 50
 #define GRAVITY 20.0f
 #define JUMP_FORCE 10.0f
 #define STOMP_FORCE 15.0f
 
-typedef struct {
+typedef struct
+{
     float fSpeed;
     int nCount;
     SDL_FRect aRects[BG_MAX];
@@ -78,11 +86,12 @@ bool player_move(float x, float y);
 
 // obstacle.c
 #define MAX_OBSTACLES 64
-#define SIZE 64.0f 
-#define FLOOR_SPEED 6.0f 
-#define SPEED 500.0f 
+#define SIZE 64.0f
+#define FLOOR_SPEED 6.0f
+#define SPEED 500.0f
 
-typedef struct {
+typedef struct
+{
     bool bIsAlive;
     bool bIsFloor;
     bool bHasPower;
@@ -105,16 +114,17 @@ int obstacle_place(float x, float y, int index);
 #define PARTICLES_H
 #define MAX_PARTICLES 256
 
-typedef struct {
+typedef struct
+{
     bool bIsAlive;
     float fLifetime;
-    SDL_FPoint v2Velocity; 
+    SDL_FPoint v2Velocity;
     SDL_FRect rRegion;
     SDL_Color sColor;
 } Particle;
 
 int particles_spawn(SDL_FPoint *pos, SDL_FPoint *vel,
-        float lifetime, float size, SDL_Color *col);
+                    float lifetime, float size, SDL_Color *col);
 
 void particles_draw(App *app);
 void particles_update(float delta);
