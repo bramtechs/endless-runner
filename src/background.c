@@ -1,7 +1,4 @@
-#include "background.h"
-#include "defs.h"
-#include "math.h"
-#include "main.h"
+#include "endless.h"
 #include <assert.h>
 
 BGLayer aLayers[BG_LAYER_COUNT];

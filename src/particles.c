@@ -1,7 +1,4 @@
-#include "particles.h"
-#include "math.h"
-#include <assert.h>
-#include "main.h"
+#include "endless.h"
 
 Particle aParticles[MAX_PARTICLES] = { false };
 int nParticleCount;

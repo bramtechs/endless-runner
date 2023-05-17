@@ -1,9 +1,4 @@
-#include "player.h"
-#include "defs.h"
-#include "main.h"
-#include "math.h"
-#include "obstacle.h"
-#include "particles.h"
+#include "endless.h"
 
 float fVelY = GRAVITY;
 bool bGrounded = false;

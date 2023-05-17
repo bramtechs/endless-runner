@@ -1,7 +1,4 @@
-#include "obstacle.h"
-#include "defs.h"
-#include "math.h"
-#include "main.h"
+#include "endless.h"
 
 Obstacle aObstacles[MAX_OBSTACLES] = { false };
 float fOffsetX = 0.0f;

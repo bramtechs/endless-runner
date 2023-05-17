@@ -1,10 +1,4 @@
-#include "main.h"
-#include "defs.h"
-#include "math.h"
-#include "player.h"
-#include "obstacle.h"
-#include "background.h"
-#include "particles.h"
+#include "endless.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -22,7 +16,9 @@ bool bHoldingStomp = false;
 // check sdl code if not 0
 bool csc(int code){ 
     if (code != 0){
-        SDL_LogError(code,"SDL function failed %d -> %s",code,SDL_GetError());
+        char msg[512]; 
+        sprintf(msg,"SDL function failed %d -> %s",code,SDL_GetError());
+        PLAT_LogError(msg);
         exit(1);
         return false;
     }
@@ -32,7 +28,9 @@ bool csc(int code){
 // check sdl pointer
 void* csp(void* ptr){
     if (ptr == NULL){
-        SDL_LogError(0,"SDL didn't return pointer");
+        char msg[512];
+        sprintf(msg,"SDL didn't return pointer");
+        PLAT_LogError(msg);
         exit(1);
         return NULL;
     }

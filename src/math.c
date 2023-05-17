@@ -1,5 +1,4 @@
-#include "main.h"
-#include "math.h"
+#include "endless.h"
 
 SDL_Color hexToColor(int hex){
     SDL_Color color;
