@@ -1,3 +1,4 @@
 #!/bin/bash
-cmake --build . && \
+cmake -S . -B build
+cmake --build build
 ./SDL2Game

@@ -1,3 +1,5 @@
+#pragma once
+
 // main.c
 #define WIDTH 1280 
 #define HEIGHT 704
@@ -101,10 +103,7 @@ int obstacle_place(float x, float y, int index);
 
 // particles.c
 #define PARTICLES_H
-
 #define MAX_PARTICLES 256
-
-#include "main.h"
 
 typedef struct {
     bool bIsAlive;
