@@ -1,10 +1,5 @@
 #pragma once
-
-#ifdef LINUX
-#include <SDL2/SDL2.h>
-#else
-#include <SDL2/SDL2.h>
-#endif
+#include <SDL2/SDL.h>
 
 // main.c
 #define WIDTH 1280
@@ -31,11 +26,6 @@ int main(void);
 void handleInput(SDL_Event *event);
 void update(float delta);
 void draw(App *app);
-
-// platform.c
-void PLAT_LogError(char[] buffer);
-void PLAT_LogInfo(char[] buffer);
-void PLAT_Init(void);
 
 // math.h
 SDL_Color hexToColor(int hex);

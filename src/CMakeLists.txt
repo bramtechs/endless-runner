@@ -7,15 +7,14 @@ include_directories(${SDL2_INCLUDE_DIRS},./src)
 
 
 add_executable(SDL2Game 
-    src/main.c
-    src/math.c
-    src/platform.c
-    src/player.c
-    src/obstacle.c
-    src/background.c
-    src/particles.c
-    src/gui.c
+    main.c
+    math.c
+    player.c
+    obstacle.c
+    background.c
+    particles.c
+    gui.c
 
-    src/endless.h
+    endless.h
 )
 target_link_libraries(SDL2Game ${SDL2_LIBRARIES})

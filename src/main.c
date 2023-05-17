@@ -18,7 +18,7 @@ bool csc(int code){
     if (code != 0){
         char msg[512]; 
         sprintf(msg,"SDL function failed %d -> %s",code,SDL_GetError());
-        PLAT_LogError(msg);
+        SDL_LogError(0,msg);
         exit(1);
         return false;
     }
@@ -30,7 +30,7 @@ void* csp(void* ptr){
     if (ptr == NULL){
         char msg[512];
         sprintf(msg,"SDL didn't return pointer");
-        PLAT_LogError(msg);
+        SDL_LogError(0,msg);
         exit(1);
         return NULL;
     }
